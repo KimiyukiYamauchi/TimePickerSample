@@ -1,0 +1,3 @@
+# TimePickerSample
+
+TimePickerとそれで設定した時間で通知を出す処理の動作確認
