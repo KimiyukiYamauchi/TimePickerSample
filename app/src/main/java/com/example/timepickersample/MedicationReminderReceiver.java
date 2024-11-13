@@ -18,6 +18,13 @@ public class MedicationReminderReceiver  extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         String doseTime = intent.getStringExtra("doseTime");
 
+        // MainActivityを開くIntentを作成
+        Intent notificationIntent = new Intent(context, MainActivity.class);
+        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(
+                context, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+
         NotificationManager notificationManager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
@@ -31,7 +38,9 @@ public class MedicationReminderReceiver  extends BroadcastReceiver {
                 .setSmallIcon(android.R.drawable.ic_dialog_info)
                 .setContentTitle("Medication Reminder")
                 .setContentText("It's time to take your medicine at " + doseTime)
-                .setPriority(NotificationCompat.PRIORITY_HIGH);
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setContentIntent(pendingIntent)  // タップ時に起動するIntentを設定
+                .setAutoCancel(true);  // タップ後に通知を消す
 
         notificationManager.notify((int) System.currentTimeMillis(), builder.build());
     }
